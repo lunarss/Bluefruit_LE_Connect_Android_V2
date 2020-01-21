@@ -1,17 +1,21 @@
 package com.adafruit.bluefruit.le.connect.app;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -21,6 +25,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SimpleItemAnimator;
 
+import android.telephony.SmsManager;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -39,6 +44,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.adafruit.bluefruit.le.connect.R;
 import com.adafruit.bluefruit.le.connect.ble.BleUtils;
@@ -72,6 +78,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
     private final static String kPreferences_echo = "echo";
     private final static String kPreferences_asciiMode = "ascii";
     private final static String kPreferences_timestampDisplayMode = "timestampdisplaymode";
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS =0 ;
 
     // UI
     private EditText mBufferTextView;
@@ -584,12 +591,14 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                     fallDetect[3] = extractInt(packet);
                     fallStatus = fallDetectAlg(fallDetect);
                     if (fallStatus == 0) {
-                         // No action
+                        // No action
                     }else if (buttonTimeCounter >= 20){
-                         // Call phone
-                        buttonTimeCounter = 0;
+                        // Call phone
+                        makePhoneCall();
+
                     }else if (fallStatus == 1){
                         // Send text message
+                        sendSMSMsg();
                     }
 
                     onUartPacketText(packet);
@@ -956,6 +965,30 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
             return 1;
         }
         return 0;
+    }
+
+    private boolean makePhoneCall(){
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:9059231699"));
+
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        startActivity(callIntent);
+        return true;
+    }
+
+    private boolean sendSMSMsg(){
+
+        if (ContextCompat.checkSelfPermission(getContext(),
+                Manifest.permission.SEND_SMS)
+                == PackageManager.PERMISSION_GRANTED) {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("tel:9059231699", null, "Text from First Alert!", null, null);
+            return true;
+        }
+        return false;
     }
 
     // endregion

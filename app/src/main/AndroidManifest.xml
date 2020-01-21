@@ -26,6 +26,8 @@
     <!-- Barcode reading & Image Transfer -->
     <uses-permission android:name="android.permission.CAMERA" />
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
     <!-- App -->
     <application
         android:name=".BluefruitApplication"
