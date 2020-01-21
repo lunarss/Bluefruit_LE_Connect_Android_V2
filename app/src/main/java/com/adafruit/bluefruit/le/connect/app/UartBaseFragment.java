@@ -594,6 +594,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                         // No action
                     }else if (buttonTimeCounter >= 20){
                         // Call phone
+                        buttonTimeCounter = 0;
                         makePhoneCall();
 
                     }else if (fallStatus == 1){
