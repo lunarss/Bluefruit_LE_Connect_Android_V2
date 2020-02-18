@@ -55,7 +55,7 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
     private final static int MODULE_THERMALCAMERA = 7;
     private final static int MODULE_IMAGETRANSFER = 8;
     private final static int MODULE_DFU = 9;
-
+    private final static int MODULE_CONTACT = 10;
     // Data
     private PeripheralModulesFragmentListener mListener;
     private List<BlePeripheralBattery> mBatteryPeripherals = new ArrayList<>();
@@ -205,18 +205,22 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
         final String singlePeripheralIdentifier = mBlePeripheral != null ? mBlePeripheral.getIdentifier() : null;
 
         switch (moduleId) {
+
+            case MODULE_CONTACT:
+                fragment = ContactFragment.newInstance(singlePeripheralIdentifier);
+                break;
 //            case MODULE_INFO:
 //                if (singlePeripheralIdentifier != null) {
 //                    fragment = InfoFragment.newInstance(singlePeripheralIdentifier);
 //                }
 //                break;
 
-            case MODULE_UART:
+              case MODULE_UART:
                 fragment = UartModeFragment.newInstance(singlePeripheralIdentifier);
                 break;
 
-//            case MODULE_PLOTTER:
-//                fragment = PlotterFragment.newInstance(singlePeripheralIdentifier);
+//            case module_plotter:
+//                fragment = plotterfragment.newinstance(singleperipheralidentifier);
 //                break;
 
 //            case MODULE_PINIO:
@@ -442,6 +446,11 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
                             iconDrawableId = R.drawable.tab_dfu_icon;
                             titleId = R.string.dfu_tab_title;
                             break;
+
+                        case MODULE_CONTACT:
+                            iconDrawableId = R.drawable.tab_uart_icon;
+                            titleId = R.string.contact_title;
+                            break;
                     }
 
                     ModuleViewHolder moduleViewHolder = (ModuleViewHolder) holder;
@@ -483,13 +492,13 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
                 final boolean hasDfu = BlePeripheralDfu.hasDfu(mBlePeripheral);
 
                 if (hasUart && hasDfu) {
-                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_NEOPIXEL, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_DFU};
+                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_NEOPIXEL, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_DFU, MODULE_CONTACT};
                 } else if (hasUart) {
-                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER};
+                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_CONTACT};
                 } else if (hasDfu) {
-                    return new int[]{MODULE_INFO, MODULE_DFU};
+                    return new int[]{MODULE_INFO, MODULE_DFU, MODULE_CONTACT};
                 } else {
-                    return new int[]{MODULE_INFO};
+                    return new int[]{MODULE_INFO, MODULE_CONTACT};
                 }
             }
         }

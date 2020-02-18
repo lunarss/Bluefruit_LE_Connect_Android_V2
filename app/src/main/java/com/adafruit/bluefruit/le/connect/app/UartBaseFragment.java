@@ -970,7 +970,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
 
     private boolean makePhoneCall(){
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:9059231699"));
+        callIntent.setData(Uri.parse("tel:" + MainActivity.phone));
 
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
@@ -986,7 +986,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                 Manifest.permission.SEND_SMS)
                 == PackageManager.PERMISSION_GRANTED) {
             SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage("tel:9059231699", null, "Text from First Alert!", null, null);
+            smsManager.sendTextMessage("tel:"+MainActivity.phone, null, "Text from First Alert!", null, null);
             return true;
         }
         return false;

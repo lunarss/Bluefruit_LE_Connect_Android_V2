@@ -65,6 +65,9 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.S
     private AlertDialog mRequestLocationDialog;
     private boolean hasUserAlreadyBeenAskedAboutBluetoothStatus = false;
 
+    public static String contact = "";
+    public static String phone = "";
+
     // region Activity Lifecycle
     @Override
     protected void onCreate(Bundle savedInstanceState) {
