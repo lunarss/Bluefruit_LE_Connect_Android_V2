@@ -569,4 +569,7 @@
 	<!-- Contact -->
 	<string name="contact_title">Contact</string>
 
+	<!-- Alert Level -->
+	<string name="alert_level_title">Alert Level</string>
+
 </resources>

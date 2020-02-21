@@ -56,6 +56,7 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
     private final static int MODULE_IMAGETRANSFER = 8;
     private final static int MODULE_DFU = 9;
     private final static int MODULE_CONTACT = 10;
+    private final static int MODULE_ALERT = 11;
     // Data
     private PeripheralModulesFragmentListener mListener;
     private List<BlePeripheralBattery> mBatteryPeripherals = new ArrayList<>();
@@ -208,6 +209,9 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
 
             case MODULE_CONTACT:
                 fragment = ContactFragment.newInstance(singlePeripheralIdentifier);
+                break;
+            case MODULE_ALERT:
+                fragment = AlertLevelFragment.newInstance(singlePeripheralIdentifier);
                 break;
 //            case MODULE_INFO:
 //                if (singlePeripheralIdentifier != null) {
@@ -451,6 +455,10 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
                             iconDrawableId = R.drawable.tab_uart_icon;
                             titleId = R.string.contact_title;
                             break;
+                        case MODULE_ALERT:
+                            iconDrawableId = R.drawable.tab_info_icon;
+                            titleId = R.string.alert_level_title;
+                            break;
                     }
 
                     ModuleViewHolder moduleViewHolder = (ModuleViewHolder) holder;
@@ -492,13 +500,13 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
                 final boolean hasDfu = BlePeripheralDfu.hasDfu(mBlePeripheral);
 
                 if (hasUart && hasDfu) {
-                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_NEOPIXEL, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_DFU, MODULE_CONTACT};
+                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_NEOPIXEL, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_DFU, MODULE_CONTACT, MODULE_ALERT};
                 } else if (hasUart) {
-                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_CONTACT};
+                    return new int[]{MODULE_INFO, MODULE_UART, MODULE_PLOTTER, MODULE_PINIO, MODULE_CONTROLLER, MODULE_THERMALCAMERA, MODULE_IMAGETRANSFER, MODULE_CONTACT, MODULE_ALERT};
                 } else if (hasDfu) {
-                    return new int[]{MODULE_INFO, MODULE_DFU, MODULE_CONTACT};
+                    return new int[]{MODULE_INFO, MODULE_DFU, MODULE_CONTACT, MODULE_ALERT};
                 } else {
-                    return new int[]{MODULE_INFO, MODULE_CONTACT};
+                    return new int[]{MODULE_INFO, MODULE_CONTACT, MODULE_ALERT};
                 }
             }
         }
