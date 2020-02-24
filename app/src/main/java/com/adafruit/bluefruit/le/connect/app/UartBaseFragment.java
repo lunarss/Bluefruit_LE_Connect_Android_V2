@@ -126,6 +126,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
 
     private int fallStatus = 0;
     private int buttonTimeCounter = 0;
+    private int usrActionCounter = 0;
     private final int[][] fallDetect = new int[4][3];
 
     // region Fragment Lifecycle
@@ -565,6 +566,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
         List<UartPacket> packetsCache = mUartData.getPacketsCache();
         final String[] warning = new String[] {"Warning!"};
         final int packetsCacheSize = packetsCache.size();
+        usrActionCounter++;
         if (mPacketsCacheLastSize != packetsCacheSize) {        // Only if the buffer has changed
 
             if (mIsTimestampDisplayMode) {
@@ -606,9 +608,10 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                         buttonTimeCounter = 0;
                         makePhoneCall();
 
-                    }else if (fallStatus == 1){
+                    }else if (fallStatus == 1 && usrActionCounter >= 50){
                         // Send text message
                         fallStatus = 0;
+                        usrActionCounter = 0;
                         sendSMSMsg();
                     }else{
 
@@ -619,9 +622,10 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                         buttonTimeCounter = 0;
                         makePhoneCall911();
 
-                    }else if (fallStatus == 1){
+                    }else if (fallStatus == 1 && usrActionCounter >= 50){
                         // Send text message
                         fallStatus = 0;
+                        usrActionCounter = 0;
                         makePhoneCall();
                     } else{
 
