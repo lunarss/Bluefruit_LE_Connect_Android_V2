@@ -147,6 +147,11 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
 
         final Context context = getContext();
 
+        // Debug component
+        TextView CurrentAlertLevel = view.findViewById(R.id.sendButton);
+//        CurrentAlertLevel.setText(Boolean.toString(MainActivity.alertFlag));
+        CurrentAlertLevel.setText(MainActivity.alertLevel);
+
         // Buffer recycler view
         if (context != null) {
             mBufferRecylerView = view.findViewById(R.id.bufferRecyclerView);
@@ -589,30 +594,38 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                         fallDetect[j] = fallDetect[j+1];
                     }
                     fallDetect[3] = extractInt(packet);
-                    fallStatus = fallDetectAlg(fallDetect);
 
                     onUartPacketText(packet);
                 }
 
-                if (buttonTimeCounter >= 20 && !MainActivity.alertFlag){
-                    // Call phone
-                    buttonTimeCounter = 0;
-                    makePhoneCall();
+                fallStatus = fallDetectAlg(fallDetect);
 
-                }else if (fallStatus == 1 && !MainActivity.alertFlag){
-                    // Send text message
-                    sendSMSMsg();
-                    fallStatus = 0;
+                if(!MainActivity.alertFlag){
+                    if (buttonTimeCounter >= 20){
+                        // Call phone
+                        buttonTimeCounter = 0;
+                        makePhoneCall();
 
-                }else if (buttonTimeCounter >= 20 && MainActivity.alertFlag){
-                    // Call phone
-                    buttonTimeCounter = 0;
-                    makePhoneCall911();
+                    }else if (fallStatus == 1){
+                        // Send text message
+                        fallStatus = 0;
+                        sendSMSMsg();
+                    }else{
 
-                }else if (fallStatus == 1 && MainActivity.alertFlag){
-                    // Send text message
-                    makePhoneCall();
-                    fallStatus = 0;
+                    }
+                }else{
+                    if (buttonTimeCounter >= 20){
+                        // Call phone 911
+                        buttonTimeCounter = 0;
+                        makePhoneCall911();
+
+                    }else if (fallStatus == 1){
+                        // Send text message
+                        fallStatus = 0;
+                        makePhoneCall();
+                    } else{
+
+                    }
                 }
 
                 mBufferTextView.setText(mTextSpanBuffer);
@@ -944,7 +957,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
         double pitchAvg = 0.0;
         double rollAvg = 0.0;
         double yawAvg = 0.0;
-        int[] warning = new int[]{999,999,999};
+//        int[] warning = new int[]{999,999,999};
 
 
 //        for (i = (49-(buttonThres*10)); i < 50; i++){
@@ -962,6 +975,9 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
 
         //------fall detection--------------
         for (i = 0; i < 4; i++){
+            if(angleArr[i][0] == 999 && angleArr[i][1] == 999 && angleArr[i][2] == 999){
+                return 0;
+            }
             yawAvg += angleArr[i][0];
             pitchAvg += angleArr[i][1];
             rollAvg += angleArr [i][2];
@@ -992,7 +1008,7 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
 
     private boolean makePhoneCall911(){
         Intent callIntent = new Intent(Intent.ACTION_CALL);
-        callIntent.setData(Uri.parse("tel:15806197786"));
+        callIntent.setData(Uri.parse("tel:91111111111"));
 
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
