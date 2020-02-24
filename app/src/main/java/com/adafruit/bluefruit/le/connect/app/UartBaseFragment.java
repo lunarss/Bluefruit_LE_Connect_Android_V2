@@ -590,19 +590,29 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
                     }
                     fallDetect[3] = extractInt(packet);
                     fallStatus = fallDetectAlg(fallDetect);
-                    if (fallStatus == 0) {
-                        // No action
-                    }else if (buttonTimeCounter >= 20){
-                        // Call phone
-                        buttonTimeCounter = 0;
-                        makePhoneCall();
-
-                    }else if (fallStatus == 1){
-                        // Send text message
-                        sendSMSMsg();
-                    }
 
                     onUartPacketText(packet);
+                }
+
+                if (buttonTimeCounter >= 20 && !MainActivity.alertFlag){
+                    // Call phone
+                    buttonTimeCounter = 0;
+                    makePhoneCall();
+
+                }else if (fallStatus == 1 && !MainActivity.alertFlag){
+                    // Send text message
+                    sendSMSMsg();
+                    fallStatus = 0;
+
+                }else if (buttonTimeCounter >= 20 && MainActivity.alertFlag){
+                    // Call phone
+                    buttonTimeCounter = 0;
+                    makePhoneCall911();
+
+                }else if (fallStatus == 1 && MainActivity.alertFlag){
+                    // Send text message
+                    makePhoneCall();
+                    fallStatus = 0;
                 }
 
                 mBufferTextView.setText(mTextSpanBuffer);
@@ -971,6 +981,18 @@ public abstract class UartBaseFragment extends ConnectedPeripheralFragment imple
     private boolean makePhoneCall(){
         Intent callIntent = new Intent(Intent.ACTION_CALL);
         callIntent.setData(Uri.parse("tel:" + MainActivity.phone));
+
+        if (ActivityCompat.checkSelfPermission(getContext(),
+                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+            return false;
+        }
+        startActivity(callIntent);
+        return true;
+    }
+
+    private boolean makePhoneCall911(){
+        Intent callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse("tel:15806197786"));
 
         if (ActivityCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {

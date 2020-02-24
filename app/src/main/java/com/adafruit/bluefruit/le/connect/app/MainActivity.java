@@ -66,8 +66,9 @@ public class MainActivity extends AppCompatActivity implements ScannerFragment.S
     private boolean hasUserAlreadyBeenAskedAboutBluetoothStatus = false;
 
     public static String contact = "";
-    public static String phone = "911";
-    public static String alertLevel = "High";
+    public static String phone = "";
+    public static String alertLevel = "Low";
+    public static boolean alertFlag = false;
 
     // region Activity Lifecycle
     @Override

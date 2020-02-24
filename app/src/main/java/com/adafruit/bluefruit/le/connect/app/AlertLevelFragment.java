@@ -54,12 +54,14 @@ public class AlertLevelFragment extends ConnectedPeripheralFragment {
 
             highButton.setOnClickListener(view1 -> {
                 MainActivity.alertLevel = "High";
+                MainActivity.alertFlag = true;
                 Toast.makeText(context, "Alert Level set to high", Toast.LENGTH_SHORT).show();
                 CurrentAlertLevel.setText(MainActivity.alertLevel);
             });
 
             lowButton.setOnClickListener(view1 -> {
                 MainActivity.alertLevel = "Low";
+                MainActivity.alertFlag = false;
                 Toast.makeText(context, "Alert Level set to low", Toast.LENGTH_SHORT).show();
                 CurrentAlertLevel.setText(MainActivity.alertLevel);
             });

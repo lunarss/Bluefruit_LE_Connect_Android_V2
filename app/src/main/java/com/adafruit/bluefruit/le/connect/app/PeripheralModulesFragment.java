@@ -219,7 +219,7 @@ public class PeripheralModulesFragment extends ConnectedPeripheralFragment {
 //                }
 //                break;
 
-              case MODULE_UART:
+            case MODULE_UART:
                 fragment = UartModeFragment.newInstance(singlePeripheralIdentifier);
                 break;
 
